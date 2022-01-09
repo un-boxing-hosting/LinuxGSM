@@ -36,7 +36,7 @@ for distro_info in "${distro_info_array[@]}"; do
 		distroname="$(grep "PRETTY_NAME" /etc/os-release | awk -F\= '{gsub(/"/,"",$2);print $2}')"
 		distroversion="$(grep "VERSION_ID" /etc/os-release | awk -F\= '{gsub(/"/,"",$2);print $2}')"
 		# Special var for rhel like distros to removed point in number e.g 8.4 to just 8.
-		distroversionrh="$(printf "%.0f\n" "${distroversion}")"
+		distroversionrh="$(sed -nr 's/^VERSION_ID="([0-9]*).+?"/\1/p' /etc/os-release)"
 		distroid="$(grep "ID=" /etc/os-release | grep -v _ID | awk -F\= '{gsub(/"/,"",$2);print $2}')"
 		distroidlike="$(grep "ID_LIKE=" /etc/os-release | grep -v _ID | awk -F\= '{gsub(/"/,"",$2);print $2}')"
 		distrocodename="$(grep "VERSION_CODENAME" /etc/os-release | awk -F\= '{gsub(/"/,"",$2);print $2}')"
@@ -78,6 +78,22 @@ if [[ "${distroidlike}" == *"rhel"* ]]||[ "${distroid}" == "rhel" ]; then
 	distroversioncsv="${distroversionrh}"
 else
 	distroversioncsv="${distroversion}"
+fi
+
+# Check if distro supported by distro vendor.
+if [ "$(command -v distro-info 2>/dev/null)" ]; then
+	distrosunsupported="$(distro-info --unsupported)"
+	distrosunsupported_array=( "${distrosunsupported}" )
+	for distrounsupported in "${distrosunsupported_array[@]}"; do
+		if [ "${distrounsupported}" == "${distrocodename}" ]; then
+			distrosupport=unsupported
+			break
+		else
+			distrosupport=supported
+		fi
+	done
+else
+	distrosupport=unknown
 fi
 
 ## Glibc version
@@ -291,11 +307,11 @@ if [ -z "${displaymasterserver}" ]; then
 			if [ "${steammaster}" == "true" ]||[ "${commandname}" == "DEV-QUERY-RAW" ]; then
 				# Will query server IP addresses first.
 				for queryip in "${queryips[@]}"; do
-					masterserver="$(curl --connect-timeout 10 -m 3 -s 'https://api.steampowered.com/ISteamApps/GetServersAtAddress/v0001?addr='${queryip}':'${port}'&format=json' | jq '.response.servers[]|.addr' | wc -l 2>/dev/null)"
+					masterserver="$(curl --connect-timeout 10 -m 3 -s "https://api.steampowered.com/ISteamApps/GetServersAtAddress/v0001?addr=${queryip}&format=json" | jq --arg port "${port}" --arg queryport "${queryport}" '.response.servers[] | select((.gameport == ($port|tonumber) or (.gameport == ($queryport|tonumber)))) | .addr' | wc -l 2>/dev/null)"
 				done
 				# Should that not work it will try the external IP.
 				if [ "${masterserver}" == "0" ]; then
-					masterserver="$(curl --connect-timeout 10 -m 3 -s 'https://api.steampowered.com/ISteamApps/GetServersAtAddress/v0001?addr='${extip}':'${port}'&format=json' | jq '.response.servers[]|.addr' | wc -l 2>/dev/null)"
+					masterserver="$(curl --connect-timeout 10 -m 3 -s "https://api.steampowered.com/ISteamApps/GetServersAtAddress/v0001?addr=${extip}&format=json" | jq --arg port "${port}" --arg queryport "${queryport}" '.response.servers[] | select((.gameport == ($port|tonumber) or (.gameport == ($queryport|tonumber)))) | .addr' | wc -l 2>/dev/null)"
 				fi
 				if [ "${masterserver}" == "0" ]; then
 					displaymasterserver="false"

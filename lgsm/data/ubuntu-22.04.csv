@@ -1,5 +1,5 @@
-all,bc,binutils,bsdmainutils,bzip2,ca-certificates,cpio,curl,file,gzip,hostname,jq,lib32gcc1,lib32stdc++6,netcat,python3,tar,tmux,unzip,util-linux,wget,xz-utils
-steamcmd,lib32gcc1,lib32stdc++6,libsdl2-2.0-0:i386,steamcmd
+all,bc,binutils,bsdmainutils,bzip2,ca-certificates,cpio,curl,distro-info,file,gzip,hostname,jq,lib32gcc-s1,lib32stdc++6,netcat,python3,tar,tmux,unzip,util-linux,wget,xz-utils
+steamcmd,lib32gcc-s1,lib32stdc++6,libsdl2-2.0-0:i386,steamcmd
 ac
 ahl
 ahl2
@@ -17,7 +17,6 @@ bs
 bt,libicu-dev
 bt1944
 cc
-cd
 cmw
 cod,libstdc++5:i386
 cod2,libstdc++5:i386
@@ -30,7 +29,6 @@ cscz
 csgo
 css,libtinfo5:i386
 dab
-dayz
 dmc
 dod
 dodr
@@ -59,12 +57,12 @@ kf2
 lo
 l4d
 l4d2
-mc,openjdk-8-jre
+mc,openjdk-17-jre
 mcb
 mh
 mohaa,libstdc++5:i386
 mom
-mta
+mta,libncursesw5
 mumble
 nd
 nmrih,libtinfo5:i386
@@ -74,11 +72,11 @@ ns2c,speex:i386,libtbb2
 onset,libmariadbclient-dev
 opfor
 pc
-pmc,openjdk-8-jre
+pmc,openjdk-17-jre
 pstbs,libgconf-2-4
 pvkii
 pvr,libc++1
-pz,openjdk-8-jre,rng-tools
+pz,openjdk-16-jre,rng-tools
 q2
 q3
 ql
@@ -87,7 +85,7 @@ ricochet
 ro
 rtcw
 rust,lib32z1
-rw,openjdk-8-jre
+rw,openjdk-16-jre
 samp
 sb
 sbots
@@ -102,7 +100,7 @@ squad
 st
 stn
 sven,libssl1.1:i386,zlib1g:i386
-terraria
+terraria,libsdl
 tf2,libcurl4-gnutls-dev:i386
 tfc
 ti
@@ -120,7 +118,7 @@ vs
 vints,mono-complete
 wet
 wf
-wmc,openjdk-8-jre
+wmc,openjdk-17-jre
 wurm,xvfb
 zmr,libtinfo5:i386
 zps,libtinfo5:i386

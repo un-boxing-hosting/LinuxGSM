@@ -658,7 +658,7 @@ fn_info_message_ports_edit(){
 
 	startparameterslocation="${red}UNKNOWN${default}"
 	# engines/games that require editing in the config file.
-	local ports_edit_array=( "ac" "arma3" "bo" "bt" "dst" "eco" "idtech2" "idtech3" "idtech3_ql" "jc2" "jc3" "lwjgl2" "mcb" "mumble" "pc" "pz" "qw" "refractor" "renderware" "rw" "sb" "sdtd" "st" "stn" "ts3" "tw" "terraria" "unreal" "unreal2" "unreal3" "vints" "wurm")
+	local ports_edit_array=( "ac" "arma3" "bo" "bt" "cd" "dst" "eco" "idtech2" "idtech3" "idtech3_ql" "jc2" "jc3" "lwjgl2" "mcb" "mumble" "pc" "pz" "qw" "refractor" "renderware" "rw" "sb" "sdtd" "st" "stn" "ts3" "tw" "terraria" "unreal" "unreal2" "unreal3" "vints" "wurm")
 	for port_edit in "${ports_edit_array[@]}"; do
 		if [ "${shortname}" == "ut3" ]; then
 			startparameterslocation="${servercfgdir}/UTWeb.ini"
@@ -669,7 +669,7 @@ fn_info_message_ports_edit(){
 		fi
 	done
 	# engines/games that require editing the start parameters.
-	local ports_edit_array=( "av" "col" "fctr" "goldsrc" "hw" "iw3.0" "ioquake3" "qfusion" "rust" "scpsl" "scpslsm" "sol" "spark" "source" "unreal4" "arma3" "unt" "vh" )
+	local ports_edit_array=( "av" "col" "fctr" "goldsrc" "hw" "iw3.0" "ioquake3" "qfusion" "rust" "scpsl" "scpslsm" "sol" "spark" "source" "unreal4" "arma3" "dayz" "unt" "vh" )
 	for port_edit in "${ports_edit_array[@]}"; do
 		if [ "${engine}" == "${port_edit}" ]||[ "${gamename}" == "${port_edit}" ]||[ "${shortname}" == "${port_edit}" ]; then
 			startparameterslocation="${configdirserver}"
@@ -800,7 +800,7 @@ fn_info_message_arma3(){
 		fn_port "header"
 		fn_port "Game" port udp
 		fn_port "Voice" voiceport udp
-		fn_port "Query Steam" queryport udp
+		fn_port "Query" queryport udp
 		fn_port "Steam Master" steammasterport udp
 		fn_port "Voice (unused)" voiceunusedport udp
 		fn_port "BattleEye" battleeyeport udp
@@ -855,6 +855,15 @@ fn_info_message_bt1944(){
 		fn_port "header"
 		fn_port "Game" port udp
 		fn_port "Query" queryport udp
+		fn_port "RCON" rconport tcp
+	} | column -s $'\t' -t
+}
+
+fn_info_messages_cd(){
+	{
+		fn_port "header"
+		fn_port "Game" port udp
+		fn_port "Steam" steamport udp
 		fn_port "RCON" rconport tcp
 	} | column -s $'\t' -t
 }
@@ -926,6 +935,16 @@ fn_info_message_csgo(){
 		fn_port "RCON" rconport tcp
 		fn_port "SourceTV" sourcetvport udp
 		fn_port "Client" clientport udp
+	} | column -s $'\t' -t
+}
+
+fn_info_message_dayz(){
+	{
+		fn_port "header"
+		fn_port "Game" port udp
+		fn_port "Query Steam" queryport udp
+		fn_port "Steam Master" steammasterport udp
+		fn_port "BattleEye" battleeyeport udp
 	} | column -s $'\t' -t
 }
 
@@ -1029,16 +1048,6 @@ fn_info_message_jk2(){
 	{
 		fn_port "header"
 		fn_port "Game" port udp
-	} | column -s $'\t' -t
-}
-
-fn_info_message_lo(){
-	echo -e "netstat -atunp | grep MistServer"
-	echo -e ""
-	{
-		echo -e "${lightblue}DESCRIPTION\tDIRECTION\tPORT\tPROTOCOL${default}"
-		echo -e "> Game\tINBOUND\t${port}\tudp"
-		echo -e "> Query\tINBOUND\t${queryport}\tudp"
 	} | column -s $'\t' -t
 }
 
@@ -1342,6 +1351,15 @@ fn_info_message_sdtd(){
 	} | column -s $'\t' -t
 }
 
+fn_info_message_sf(){
+	{
+		fn_port "header"
+		fn_port "Game" port udp
+		fn_port "Query" queryport udp
+		fn_port "Beacon" beaconport udp
+	} | column -s $'\t' -t
+}
+
 fn_info_message_sof2(){
 	{
 		fn_port "header"
@@ -1412,6 +1430,14 @@ fn_info_message_st(){
 	fn_messages_separator
 	{
 		echo -e "${lightblue}Web Admin url:\t${default}http://${webadminip}:${webadminport}"
+	} | column -s $'\t' -t
+}
+
+fn_info_message_ti(){
+	{
+		fn_port "header"
+		fn_port "Game" port udp
+		fn_port "Query" queryport udp
 	} | column -s $'\t' -t
 }
 
@@ -1518,6 +1544,7 @@ fn_info_message_unt(){
 		fn_port "header"
 		fn_port "Game" port udp
 		fn_port "Query" queryport udp
+		fn_port "Steam" steamport udp
 	} | column -s $'\t' -t
 }
 
@@ -1615,6 +1642,8 @@ fn_info_message_select_engine(){
 		fn_info_message_bt
 	elif [ "${shortname}" == "bt1944" ]; then
 		fn_info_message_bt1944
+	elif [ "${shortname}" == "cd" ]; then
+		fn_info_messages_cd
 	elif [ "${shortname}" == "csgo" ]; then
 		fn_info_message_csgo
 	elif [ "${shortname}" == "cmw" ]; then
@@ -1631,6 +1660,8 @@ fn_info_message_select_engine(){
 		fn_info_message_codwaw
 	elif [ "${shortname}" == "col" ]; then
 		fn_info_message_col
+	elif [ "${shortname}" == "dayz" ]; then
+		fn_info_message_dayz
 	elif [ "${shortname}" == "dodr" ]; then
 		fn_info_message_dodr
 	elif [ "${shortname}" == "dst" ]; then
@@ -1653,8 +1684,6 @@ fn_info_message_select_engine(){
 		fn_info_message_jc3
 	elif [ "${shortname}" == "jk2" ]; then
 		fn_info_message_jk2
-	elif [ "${shortname}" == "lo" ]; then
-		fn_info_message_lo
 	elif [ "${shortname}" == "kf" ]; then
 		fn_info_message_kf
 	elif [ "${shortname}" == "kf2" ]; then
@@ -1707,6 +1736,8 @@ fn_info_message_select_engine(){
 		fn_info_message_scpsl
 	elif [ "${shortname}" == "sdtd" ]; then
 		fn_info_message_sdtd
+	elif [ "${shortname}" == "sf" ]; then
+		fn_info_message_sf
 	elif [ "${shortname}" == "sof2" ]; then
 		fn_info_message_sof2
 	elif [ "${shortname}" == "sol" ]; then
@@ -1719,6 +1750,8 @@ fn_info_message_select_engine(){
 		fn_info_message_stn
 	elif [ "${shortname}" == "terraria" ]; then
 		fn_info_message_terraria
+	elif [ "${shortname}" == "ti" ]; then
+		fn_info_message_ti
 	elif [ "${shortname}" == "ts3" ]; then
 		fn_info_message_ts3
 	elif [ "${shortname}" == "tu" ]; then
