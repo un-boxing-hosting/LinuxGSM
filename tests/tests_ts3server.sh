@@ -103,7 +103,7 @@ fn_bootstrap_fetch_file(){
 				mkdir -p "${local_filedir}"
 			fi
 			# Trap will remove part downloaded files if canceled.
-			trap fn_fetch_trap INT
+			trap fn_fetch_trap INT SIGTERM
 			# Larger files show a progress bar.
 
 			echo -en "fetching ${fileurl_name} ${local_filename}...\c"
