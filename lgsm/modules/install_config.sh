@@ -1,7 +1,7 @@
 #!/bin/bash
 # LinuxGSM install_config.sh module
 # Author: Daniel Gibbs
-# Contributors: http://linuxgsm.com/contrib
+# Contributors: https://linuxgsm.com/contrib
 # Website: https://linuxgsm.com
 # Description: Creates default server configs.
 
@@ -62,14 +62,21 @@ fn_default_config_local() {
 	fn_messages_separator
 	echo -e "Copying default configs."
 	fn_check_cfgdir
-	echo -en "copying config file [ ${italic}${servercfgdefault}${default} ]"
-	cp -n "${servercfgdir}/${servercfgdefault}" "${servercfgfullpath}"
+
+	# Check if the directory for ${servercfgfullpath} exists, if not, create it
+	if [ ! -d "$(dirname "${servercfgfullpath}")" ]; then
+		mkdir -p "$(dirname "${servercfgfullpath}")"
+	fi
+
+	echo -en "copying config file [ ${italic}${servercfgdefault}${default} ]: "
+	cp --update=none "${servercfgdir}/${servercfgdefault}" "${servercfgfullpath}"
+	exitcode=$?
 	if [ "${exitcode}" != 0 ]; then
 		fn_print_fail_eol
-		fn_script_log_fail "copying config file [ ${servercfgdefault} ]"
+		fn_script_log_fail "copying config file [ ${servercfgdefault} ]: "
 	else
 		fn_print_ok_eol
-		fn_script_log_pass "copying config file [ ${servercfgdefault} ]"
+		fn_script_log_pass "copying config file [ ${servercfgdefault} ]: "
 	fi
 }
 
@@ -495,6 +502,9 @@ elif [ "${shortname}" == "hl2dm" ]; then
 	fn_default_config_remote
 	fn_set_config_vars
 	fn_list_config_locations
+elif [ "${shortname}" == "hz" ]; then
+	# Config is generated on first run
+	:
 elif [ "${shortname}" == "ins" ]; then
 	array_configs+=(server.cfg)
 	fn_fetch_default_config
@@ -585,12 +595,6 @@ elif [ "${shortname}" == "mta" ]; then
 	array_configs+=(acl.xml mtaserver.conf vehiclecolors.conf)
 	fn_fetch_default_config
 	fn_default_config_remote
-	fn_list_config_locations
-elif [ "${shotname}" == "mom" ]; then
-	array_configs+=(DedicatedServerConfig.cfg)
-	fn_fetch_default_config
-	fn_default_config_remote
-	fn_set_config_vars
 	fn_list_config_locations
 elif [ "${shortname}" == "pvr" ]; then
 	fn_check_cfgdir
@@ -697,6 +701,9 @@ elif [ "${shortname}" == "sf" ]; then
 	fn_fetch_default_config
 	fn_default_config_remote
 	fn_set_config_vars
+	fn_list_config_locations
+elif [ "${shortname}" == "sm" ]; then
+	fn_default_config_local
 	fn_list_config_locations
 elif [ "${shortname}" == "sol" ]; then
 	array_configs+=(soldat.ini)
@@ -835,6 +842,13 @@ elif [ "${shortname}" == "wmc" ]; then
 	fn_fetch_default_config
 	fn_default_config_remote
 	fn_set_config_vars
+	fn_list_config_locations
+elif [ "${shortname}" == "xnt" ]; then
+	array_configs+=(server.cfg)
+	fn_fetch_default_config
+	fn_default_config_remote
+	fn_set_config_vars
+	fn_list_config_locations
 elif [ "${shortname}" == "wurm" ]; then
 	array_configs+=(server.cfg)
 	fn_fetch_default_config

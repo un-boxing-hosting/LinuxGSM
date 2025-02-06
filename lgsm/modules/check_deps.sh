@@ -1,7 +1,7 @@
 #!/bin/bash
 # LinuxGSM check_deps.sh module
 # Author: Daniel Gibbs
-# Contributors: http://linuxgsm.com/contrib
+# Contributors: https://linuxgsm.com/contrib
 # Website: https://linuxgsm.com
 # Description: Checks and installs missing dependencies.
 
@@ -204,11 +204,11 @@ fn_install_missing_deps() {
 		# If automatic dependency install is unavailable.
 		if [ "${autodepinstall}" != "0" ]; then
 			if [ "$(command -v apt 2> /dev/null)" ]; then
-				echo -e "${i386installcommand}sudo apt update; sudo apt install ${array_deps_missing[*]}"
+				echo -e " Run: '${green}${i386installcommand}sudo apt update; sudo apt install ${array_deps_missing[*]}${default}' as root to install missing dependencies."
 			elif [ "$(command -v dnf 2> /dev/null)" ]; then
-				echo -e "sudo dnf install ${array_deps_missing[*]}"
+				echo -e " Run: '${green}sudo dnf install ${array_deps_missing[*]}${default}' as root to install missing dependencies."
 			elif [ "$(command -v yum 2> /dev/null)" ]; then
-				echo -e "sudo yum install ${array_deps_missing[*]}"
+				echo -e " Run: '${green}sudo yum install ${array_deps_missing[*]}${default}' as root to install missing dependencies."
 			fi
 		fi
 

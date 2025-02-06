@@ -1,7 +1,7 @@
 #!/bin/bash
 # LinuxGSM command_backup.sh module
 # Author: Daniel Gibbs
-# Contributors: http://linuxgsm.com/contrib
+# Contributors: https://linuxgsm.com/contrib
 # Website: https://linuxgsm.com
 # Description: Creates a .tar.gz file in the backup directory.
 
@@ -126,7 +126,7 @@ fn_backup_compression() {
 		core_exit.sh
 	fi
 
-	tar -czf "${backupdir}/${backupname}.tar.gz" -C "${rootdir}" --exclude "${excludedir}" --exclude "${lockdir}" --exclude "${tmpdir}" ./.
+	tar --use-compress-program=pigz -cf "${backupdir}/${backupname}.tar.gz" -C "${rootdir}" --exclude "${excludedir}" --exclude "${lockdir}" --exclude "${tmpdir}" ./.
 	local exitcode=$?
 	if [ "${exitcode}" != 0 ]; then
 		fn_print_fail_eol
