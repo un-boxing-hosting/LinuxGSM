@@ -109,6 +109,26 @@ fn_monitor_check_stopping() {
 	fi
 }
 
+fn_monitor_check_restart_request() {
+	if [ -f "${lockdir}/${selfname}-restart-request.lock" ]; then
+		fn_print_dots "Checking restart: "
+		fn_print_checking_eol
+		fn_print_info "Checking restart: Restart requested: "
+		fn_print_info_eol_nl
+		fn_script_log_info "Checking restart: Restart requested"
+		check_players_online.sh
+		if [ -n "${playersonline}" ]; then
+			fn_print_info_nl "${playersonline} players are on the server: restart postponed"
+			fn_script_log_info "${playersonline} players are on the server: restart postponed"
+			echo "${playersonline}" > "${lockdir:?}/${selfname}-player-numbers.lock"
+			date '+%s' > "${lockdir:?}/${selfname}-restart-request.lock"
+			core_exit.sh
+		fi
+		command_restart.sh
+		core_exit.sh
+	fi
+}
+
 fn_monitor_check_backup() {
 	# Remove stale lockfile.
 	if [ -f "${lockdir}/backup.lock" ]; then
@@ -164,8 +184,8 @@ fn_monitor_check_update_source() {
 			fn_script_log_info "Checking update: CHECKING"
 			fn_print_ok "Checking update"
 			fn_print_ok_eol_nl
-			fn_script_log_info "Checking update: ${selfname} has requested an update and needs to be restarted"
-			alert="update-request"
+			fn_script_log_info "Checking update: ${selfname} has requested a restart for an update to be applied"
+			alert="update-restart-request"
 			alert.sh
 			command_restart.sh
 			core_exit.sh
@@ -405,6 +425,7 @@ fn_monitor_check_monitoring
 fn_monitor_check_starting
 fn_monitor_check_stopping
 fn_monitor_check_session
+fn_monitor_check_restart_request
 
 # Monitor will not continue if session only check.
 if [ "${querymode}" != "1" ]; then
@@ -417,4 +438,5 @@ if [ "${querymode}" != "1" ]; then
 
 	fn_monitor_loop
 fi
+
 core_exit.sh
