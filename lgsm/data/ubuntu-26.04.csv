@@ -104,7 +104,7 @@ ricochet
 ro
 rsdw
 rtcw
-rust,lib32z1
+rust,lib32z1,libgdiplus
 rw,openjdk-25-jre
 rwr,libgpg-error0:i386,libx11-6:i386,libxext6:i386,zlib1g:i386,libidn2-0:i386
 samp
